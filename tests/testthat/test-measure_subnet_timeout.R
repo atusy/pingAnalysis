@@ -43,11 +43,12 @@ test_that("Measure timeout of switches", {
 
   # Two switches
   log |>
-    mutate(
+    dplyr::mutate(
       address = stringr::str_replace(address, "^192\\.168\\.1\\.", "192.168.2.")
     ) |>
     dplyr::bind_rows(log) |>
-    measure_subnet_timeout(log, N = 1L) |>
-    select(names(expected)) |>
-    expect_equal(bind_rows(expected, expected))
+    measure_subnet_timeout(N = 1L) |>
+    dplyr::select(names(expected)) |>
+    expect_equal(dplyr::bind_rows(expected, expected) |> dplyr::arrange(start, end))
 })
+
