@@ -8,7 +8,7 @@ Authors@R:
            email = "atusy.rpkg@gmail.com",
            comment = c(ORCID = "0000-0002-8335-495X"))
 Description: Measure the period of servers being out of service based on ping.
-License: UNLICENSED
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
