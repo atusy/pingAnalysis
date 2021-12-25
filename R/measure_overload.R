@@ -49,5 +49,6 @@ measure_overload <- function(log, m = 2L, t = 10, N = 1L) {
   log |>
     dplyr::group_by(address) |>
     dplyr::mutate(ping = let_overload_be_timeout(ping, m)) |>
+    dplyr::ungroup() |>
     measure_timeout(N = N)
 }
