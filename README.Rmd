@@ -164,7 +164,13 @@ log_df <- tibble::tibble(
   address = paste0("192.168.1.", 1L:3L, "/24") |> rep(each = N),
   ping = ifelse(pings == 0, "-", as.character(pings))
 )
-readr::write_csv(log_df, log_csv, col_names = FALSE)
+
+log_df |>
+  dplyr::mutate(
+    address = stringr::str_replace(address, "^192\\.168\\.1\\.", "192.168.2.")
+  ) |>
+  dplyr::bind_rows(log_df) |>
+  readr::write_csv(log_csv, col_names = FALSE)
 ```
 
 <details><summary>View data</summary>
@@ -193,8 +199,8 @@ address_all
 Do the analysis varying `N`.
 
 ```{r}
-measure_subnet_timeout(log_df, N = 1L)
-measure_subnet_timeout(log_df, N = 2L)
+measure_subnet_timeout(log_df, N = 1L, address_all = address_all)
+measure_subnet_timeout(log_df, N = 2L, address_all = address_all)
 ```
 
 
