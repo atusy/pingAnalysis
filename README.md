@@ -5,6 +5,7 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/atusy/pingAnalysis/workflows/R-CMD-check/badge.svg)](https://github.com/atusy/pingAnalysis/actions)
 <!-- badges: end -->
 
 Analyze ping log.
