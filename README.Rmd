@@ -56,8 +56,8 @@ readr::write_csv(log_df, log_csv, col_names = FALSE)
 
 <details><summary>View data</summary>
 
-```{r}
-knitr::kable(log_df)
+```{r, echo=FALSE, collapse=FALSE, comment=NULL}
+cat(readr::read_lines(log_csv), sep = "\n")
 ```
 
 </details>
@@ -107,8 +107,8 @@ readr::write_csv(log_df, log_csv, col_names = FALSE)
 
 <details><summary>View data</summary>
 
-```{r}
-knitr::kable(log_df)
+```{r, echo=FALSE, collapse=FALSE, comment=NULL}
+cat(readr::read_lines(log_csv), sep = "\n")
 ```
 
 </details>
@@ -149,15 +149,15 @@ N <- length(pings) / 3L
 log_df <- tibble::tibble(
   timestamp = lubridate::ymd_hms(basetime + seq(N)) |> rep(3L),
   address = paste0("192.168.1.", 1L:3L, "/24") |> rep(each = N),
-  ping = ifelse(pings == 0, NA_real_, pings)
+  ping = ifelse(pings == 0, "-", as.character(pings))
 )
 readr::write_csv(log_df, log_csv, col_names = FALSE)
 ```
 
 <details><summary>View data</summary>
 
-```{r}
-knitr::kable(log_df)
+```{r, echo=FALSE, collapse=FALSE, comment=NULL}
+cat(readr::read_lines(log_csv), sep = "\n")
 ```
 
 </details>
