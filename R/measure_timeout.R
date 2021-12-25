@@ -32,7 +32,8 @@ measure_all_timeout <- function(log) {
       n_timeout = sum(is.na(ping)),
       .groups = "drop"
     ) |>
-    dplyr::select(!nth)
+    dplyr::select(!nth) |>
+    dplyr::arrange(start, end)
 }
 
 measure_timeout <- function(log, N = 2) {
