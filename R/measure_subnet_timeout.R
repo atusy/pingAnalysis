@@ -93,7 +93,7 @@ measure_subnet_timeout_one_switch <- function(
       ),
       address = network,
     ) |>
-    measure_timeout(N = 1L) |>
+    measure_timeout(N = N) |>
     dplyr::mutate(n_timeout = as.integer(ceiling(n_timeout / 3)))
 }
 
@@ -159,6 +159,7 @@ measure_subnet_timeout <- function(log_df, N = 1L, address_all = NULL) {
   group_log_by_subnet(log_df) |>
     purrr::map_dfr(
       measure_subnet_timeout_one_switch,
+      N = N,
       address_list = group_address_by_subnet(c(address_all, log_df$address))
     ) |>
     dplyr::arrange(start, end)
