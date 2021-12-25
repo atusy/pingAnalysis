@@ -26,7 +26,7 @@ test_that("find_neighbors should group ip addresses based on subnet.", {
   )
 })
 
-test_that("Measure timeout of a one switch", {
+test_that("Measure timeout of switches", {
   basetime <- 20200101000000
   pings <- c(
     # 1  2  3  4  5  6  7  8  9 10
@@ -46,9 +46,20 @@ test_that("Measure timeout of a one switch", {
     n_timeout = c(3L, 1L)
   )
 
+  # One switch
   expect_equal(
     measure_subnet_timeout(log, N = 1L)[names(expected)] |>
       dplyr::arrange(start, end),
     expected
   )
+
+  # Two switches
+  log |>
+    mutate(
+      address = stringr::str_replace(address, "^192\\.168\\.1\\.", "192.168.2.")
+    ) |>
+    dplyr::bind_rows(log) |>
+    measure_subnet_timeout(log, N = 1L) |>
+    select(names(expected)) |>
+    expect_equal(bind_rows(expected, expected))
 })
