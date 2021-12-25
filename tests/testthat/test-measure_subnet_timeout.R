@@ -23,7 +23,7 @@ test_that("Measure timeout of switches", {
     1, 1, 1, 0, 0, 0, 0, 1, 0, 1
   )
   N <- length(pings) / 3L
-  log <- tibble::tibble(
+  log_df <- tibble::tibble(
     timestamp = lubridate::ymd_hms(basetime + seq(N)) |> rep(3L),
     address = paste0("192.168.1.", 1L:3L, "/24") |> rep(each = N),
     ping = ifelse(pings == 0, NA_real_, pings)
@@ -36,17 +36,17 @@ test_that("Measure timeout of switches", {
 
   # One switch
   expect_equal(
-    measure_subnet_timeout(log, N = 1L)[names(expected)] |>
+    measure_subnet_timeout(log_df, N = 1L)[names(expected)] |>
       dplyr::arrange(start, end),
     expected
   )
 
   # Two switches
-  log |>
+  log_df |>
     dplyr::mutate(
       address = stringr::str_replace(address, "^192\\.168\\.1\\.", "192.168.2.")
     ) |>
-    dplyr::bind_rows(log) |>
+    dplyr::bind_rows(log_df) |>
     measure_subnet_timeout(N = 1L) |>
     dplyr::select(names(expected)) |>
     expect_equal(dplyr::bind_rows(expected, expected) |> dplyr::arrange(start, end))
