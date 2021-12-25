@@ -26,6 +26,24 @@ find_subnet <- function(ipv4) {
   )
 }
 
+#' @param str A binary string with 32bits.
+#' @noRd
+find_network_internal <- function(str) {
+  start = seq(0L, 3L) * 8L + 1L
+  str |>
+    substring(start, start + 7L) |>
+    strtoi(base = 2L) |>
+    paste(collapse = ".")
+}
+
+#' Find network address
+#'
+find_network <- function(subnet) {
+  subnet |>
+    stringr::str_pad("0", width = 32L, side = "right") |>
+    purrr::map_chr(find_network_internal) |>
+    paste0("/", stringr::str_length(subnet))
+}
 
 #' Collect dead address by accumulating address and ping values
 #'
@@ -40,18 +58,6 @@ collect_dead_address <- function(address, ping) {
   )[-1L]
 }
 
-#' Minimum value of IPv4 address
-#'
-#' Assumes that all belong to the same subnet.
-#'
-#' @noRd
-min_address <- function(ipv4) {
-  paste0(
-    min(stringr::str_remove(ipv4, '/.*$')),
-    stringr::str_extract(ipv4[1L], '/.*$')
-  )
-}
-
 #' Measure timeout of one subnet, or switch
 #' @noRd
 measure_subnet_timeout_one_switch <- function(
@@ -61,6 +67,7 @@ measure_subnet_timeout_one_switch <- function(
 ) {
   subnet <- unique(find_subnet(log$address))
   if (length(subnet) != 1L) stop("Subnet must be uniuqe")
+  network <- find_network(subnet)
   member <- `if`(
     is.null(address_list),
     unique(log$address),
@@ -75,7 +82,7 @@ measure_subnet_timeout_one_switch <- function(
         NA_real_,
         dplyr::coalesce(ping, 0)
       ),
-      address = min_address(address),
+      address = network,
       dead = NULL
     ) |>
     measure_timeout(N = 1L) |>
