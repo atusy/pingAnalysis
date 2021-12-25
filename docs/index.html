@@ -77,35 +77,51 @@
 <div id="examples" class="section level2">
 <h2 class="hasAnchor">
 <a href="#examples" class="anchor"></a>Examples</h2>
-<p>Load the package with:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<ul>
+<li>Load the package with:</li>
+</ul>
+<!-- end list --><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">pingAnalysis</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>Prepare CSV file with three columns without header:
+<ul>
+<li>timestamp with YMDhms-style</li>
+<li>IPv4 address with prefix-size</li>
+<li>Ping timing. <code><a href="https://rdrr.io/r/base/Arithmetic.html">-</a></code> indicates timeout.</li>
+</ul>
+</li>
+</ul>
+<!-- end list --><pre class="csv"><code>20200101000001,192.168.1.1/24,1
+20200101000002,192.168.1.1/24,-
+20200101000003,192.168.1.2/24,1
+20200101000004,192.168.1.1/24,-
+20200101000005,192.168.1.2/24,-</code></pre>
 <div id="1-treat-all-ping-timeout-as-server-being-out-of-service" class="section level3">
 <h3 class="hasAnchor">
 <a href="#1-treat-all-ping-timeout-as-server-being-out-of-service" class="anchor"></a>1. Treat all ping timeout as server being out of service.</h3>
 <div id="prepare-data" class="section level4">
 <h4 class="hasAnchor">
 <a href="#prepare-data" class="anchor"></a>Prepare data</h4>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">log_csv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".csv"</span><span class="op">)</span>
 <span class="va">log_df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
-  timestamp <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span><span class="op">(</span><span class="fl">20200101000000</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>,
+  timestamp <span class="op">=</span> <span class="fl">20200101000000</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>,
   address <span class="op">=</span> <span class="st">"192.168.1.1/24"</span>,
   ping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"-"</span>, <span class="st">"1"</span>, <span class="st">"-"</span>, <span class="st">"-"</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="va">log_df</span>, <span class="va">log_csv</span>, col_names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <details><p><summary>View data</summary></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>01Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>02Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>03Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>04Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>05Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="dv">20200101000001</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="dv">20200101000002</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="dv">20200101000003</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="dv">20200101000004</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="dv">20200101000005</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span></code></pre></div>
 </details>
 </div>
 <div id="analyze" class="section level4">
 <h4 class="hasAnchor">
 <a href="#analyze" class="anchor"></a>Analyze</h4>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/measure_all_timeout.html">measure_all_timeout</a></span><span class="op">(</span><span class="fu"><a href="reference/read_log.html">read_log</a></span><span class="op">(</span><span class="va">log_csv</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 2 × 4</span>
 <span class="co">#&gt;   address        start               end                 n_timeout</span>
@@ -126,7 +142,7 @@
 <code>N = 1L</code> is equivalent to <code><a href="reference/measure_all_timeout.html">measure_all_timeout()</a></code>
 </li>
 </ul>
-<!-- end list --><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<!-- end list --><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/measure_all_timeout.html">measure_timeout</a></span><span class="op">(</span><span class="fu"><a href="reference/read_log.html">read_log</a></span><span class="op">(</span><span class="va">log_csv</span><span class="op">)</span>, N <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 2 × 4</span>
 <span class="co">#&gt;   address        start               end                 n_timeout</span>
@@ -136,7 +152,7 @@
 <ul>
 <li><code>N = 2L</code></li>
 </ul>
-<!-- end list --><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<!-- end list --><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/measure_all_timeout.html">measure_timeout</a></span><span class="op">(</span><span class="fu"><a href="reference/read_log.html">read_log</a></span><span class="op">(</span><span class="va">log_csv</span><span class="op">)</span>, N <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 1 × 4</span>
 <span class="co">#&gt;   address        start               end                 n_timeout</span>
@@ -150,7 +166,7 @@
 <div id="prepare-data-1" class="section level4">
 <h4 class="hasAnchor">
 <a href="#prepare-data-1" class="anchor"></a>Prepare data</h4>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">basetime</span> <span class="op">&lt;-</span> <span class="fl">20200101000000</span>
 <span class="va">pings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
   <span class="fl">0</span>, <span class="fl">11</span>, <span class="fl">0</span>, <span class="fl">11</span>, <span class="fl">12</span>, <span class="fl">0</span>, <span class="fl">11</span>, <span class="fl">12</span>, <span class="fl">13</span>,
@@ -158,37 +174,37 @@
 <span class="op">)</span> |&gt; <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="op">)</span> |&gt; <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/na_if.html">na_if</a></span><span class="op">(</span><span class="st">"0"</span><span class="op">)</span> |&gt; <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/coalesce.html">coalesce</a></span><span class="op">(</span><span class="st">"-"</span><span class="op">)</span>
 <span class="va">N</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">pings</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2L</span>
 <span class="va">log_df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
-  timestamp <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span><span class="op">(</span><span class="va">basetime</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span><span class="op">)</span> |&gt; <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">2L</span><span class="op">)</span>,
+  timestamp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">basetime</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span>, <span class="fl">2L</span><span class="op">)</span>,
   address <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"192.168.1."</span>, <span class="fl">1L</span><span class="op">:</span><span class="fl">2L</span>, <span class="st">"/24"</span><span class="op">)</span> |&gt; <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span>each <span class="op">=</span> <span class="va">N</span><span class="op">)</span>,
   ping <span class="op">=</span> <span class="va">pings</span>
 <span class="op">)</span>
 <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="va">log_df</span>, <span class="va">log_csv</span>, col_names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <details><p><summary>View data</summary></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>01Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>02Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">11</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>03Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>04Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">11</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>05Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">12</span></span>
-<span id="cb9-6"><a href="#cb9-6"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>06Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb9-7"><a href="#cb9-7"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>07Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">11</span></span>
-<span id="cb9-8"><a href="#cb9-8"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>08Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">12</span></span>
-<span id="cb9-9"><a href="#cb9-9"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>09Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">13</span></span>
-<span id="cb9-10"><a href="#cb9-10"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>01Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb9-11"><a href="#cb9-11"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>02Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">11</span></span>
-<span id="cb9-12"><a href="#cb9-12"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>03Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb9-13"><a href="#cb9-13"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>04Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">11</span></span>
-<span id="cb9-14"><a href="#cb9-14"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>05Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">12</span></span>
-<span id="cb9-15"><a href="#cb9-15"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>06Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb9-16"><a href="#cb9-16"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>07Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">11</span></span>
-<span id="cb9-17"><a href="#cb9-17"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>08Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb9-18"><a href="#cb9-18"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>09Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">13</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="dv">20200101000001</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="dv">20200101000002</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">11</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="dv">20200101000003</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="dv">20200101000004</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">11</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="dv">20200101000005</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">12</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="dv">20200101000006</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="dv">20200101000007</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">11</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="dv">20200101000008</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">12</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="dv">20200101000009</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">13</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a><span class="dv">20200101000001</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="dv">20200101000002</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">11</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="dv">20200101000003</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="dv">20200101000004</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">11</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="dv">20200101000005</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">12</span></span>
+<span id="cb10-15"><a href="#cb10-15"></a><span class="dv">20200101000006</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb10-16"><a href="#cb10-16"></a><span class="dv">20200101000007</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">11</span></span>
+<span id="cb10-17"><a href="#cb10-17"></a><span class="dv">20200101000008</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb10-18"><a href="#cb10-18"></a><span class="dv">20200101000009</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">13</span></span></code></pre></div>
 </details>
 </div>
 <div id="analyze-2" class="section level4">
 <h4 class="hasAnchor">
 <a href="#analyze-2" class="anchor"></a>Analyze</h4>
 <p>Read log</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">log_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/read_log.html">read_log</a></span><span class="op">(</span><span class="va">log_csv</span><span class="op">)</span></code></pre></div>
 <p>Analyze varying parameters:</p>
 <ul>
@@ -196,7 +212,7 @@
 <li>t: threshold of ping</li>
 <li>N: counts of continuous errors</li>
 </ul>
-<!-- end list --><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<!-- end list --><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/measure_overload.html">measure_overload</a></span><span class="op">(</span><span class="va">log_df</span>, m <span class="op">=</span> <span class="fl">1L</span>, t <span class="op">=</span> <span class="fl">10</span>, N <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 8 × 4</span>
 <span class="co">#&gt;   address        start               end                 n_timeout</span>
@@ -231,7 +247,7 @@
 <div id="prepare-data-2" class="section level4">
 <h4 class="hasAnchor">
 <a href="#prepare-data-2" class="anchor"></a>Prepare data</h4>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">basetime</span> <span class="op">&lt;-</span> <span class="fl">20200101000000</span>
 <span class="va">pings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
   <span class="co"># 1  2  3  4  5  6  7  8  9 10</span>
@@ -241,57 +257,57 @@
 <span class="op">)</span>
 <span class="va">N</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">pings</span><span class="op">)</span> <span class="op">/</span> <span class="fl">3L</span>
 <span class="va">log_df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
-  timestamp <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span><span class="op">(</span><span class="va">basetime</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span><span class="op">)</span> |&gt; <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">3L</span><span class="op">)</span>,
+  timestamp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">basetime</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span>, <span class="fl">3L</span><span class="op">)</span>,
   address <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"192.168.1."</span>, <span class="fl">1L</span><span class="op">:</span><span class="fl">3L</span>, <span class="st">"/24"</span><span class="op">)</span> |&gt; <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span>each <span class="op">=</span> <span class="va">N</span><span class="op">)</span>,
   ping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">pings</span> <span class="op">==</span> <span class="fl">0</span>, <span class="st">"-"</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">pings</span><span class="op">)</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="va">log_df</span>, <span class="va">log_csv</span>, col_names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <details><p><summary>View data</summary></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>01Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>02Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>03Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>04Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-5"><a href="#cb13-5"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>05Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-6"><a href="#cb13-6"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>06Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-7"><a href="#cb13-7"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>07Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-8"><a href="#cb13-8"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>08Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-9"><a href="#cb13-9"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>09Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-10"><a href="#cb13-10"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>10Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb13-11"><a href="#cb13-11"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>01Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb13-12"><a href="#cb13-12"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>02Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb13-13"><a href="#cb13-13"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>03Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-14"><a href="#cb13-14"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>04Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-15"><a href="#cb13-15"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>05Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-16"><a href="#cb13-16"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>06Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-17"><a href="#cb13-17"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>07Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb13-18"><a href="#cb13-18"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>08Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb13-19"><a href="#cb13-19"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>09Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-20"><a href="#cb13-20"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>10Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb13-21"><a href="#cb13-21"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>01Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb13-22"><a href="#cb13-22"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>02Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb13-23"><a href="#cb13-23"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>03Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb13-24"><a href="#cb13-24"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>04Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-25"><a href="#cb13-25"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>05Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-26"><a href="#cb13-26"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>06Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-27"><a href="#cb13-27"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>07Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-28"><a href="#cb13-28"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>08Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
-<span id="cb13-29"><a href="#cb13-29"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>09Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
-<span id="cb13-30"><a href="#cb13-30"></a><span class="dv">2020-01</span><span class="op">-</span>01T00<span class="op">:</span><span class="dv">00</span><span class="op">:</span>10Z,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="dv">20200101000001</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="dv">20200101000002</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="dv">20200101000003</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="dv">20200101000004</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="dv">20200101000005</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="dv">20200101000006</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-7"><a href="#cb14-7"></a><span class="dv">20200101000007</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-8"><a href="#cb14-8"></a><span class="dv">20200101000008</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a><span class="dv">20200101000009</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-10"><a href="#cb14-10"></a><span class="dv">20200101000010</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.1</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb14-11"><a href="#cb14-11"></a><span class="dv">20200101000001</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb14-12"><a href="#cb14-12"></a><span class="dv">20200101000002</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb14-13"><a href="#cb14-13"></a><span class="dv">20200101000003</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-14"><a href="#cb14-14"></a><span class="dv">20200101000004</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-15"><a href="#cb14-15"></a><span class="dv">20200101000005</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-16"><a href="#cb14-16"></a><span class="dv">20200101000006</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-17"><a href="#cb14-17"></a><span class="dv">20200101000007</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb14-18"><a href="#cb14-18"></a><span class="dv">20200101000008</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb14-19"><a href="#cb14-19"></a><span class="dv">20200101000009</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-20"><a href="#cb14-20"></a><span class="dv">20200101000010</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.2</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb14-21"><a href="#cb14-21"></a><span class="dv">20200101000001</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb14-22"><a href="#cb14-22"></a><span class="dv">20200101000002</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb14-23"><a href="#cb14-23"></a><span class="dv">20200101000003</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb14-24"><a href="#cb14-24"></a><span class="dv">20200101000004</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-25"><a href="#cb14-25"></a><span class="dv">20200101000005</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-26"><a href="#cb14-26"></a><span class="dv">20200101000006</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-27"><a href="#cb14-27"></a><span class="dv">20200101000007</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-28"><a href="#cb14-28"></a><span class="dv">20200101000008</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span>
+<span id="cb14-29"><a href="#cb14-29"></a><span class="dv">20200101000009</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="op">-</span></span>
+<span id="cb14-30"><a href="#cb14-30"></a><span class="dv">20200101000010</span>,<span class="dv">192</span>.<span class="dv">168</span>.<span class="fl">1.3</span><span class="op">/</span><span class="dv">24</span>,<span class="dv">1</span></span></code></pre></div>
 </details>
 </div>
 <div id="analyze-3" class="section level4">
 <h4 class="hasAnchor">
 <a href="#analyze-3" class="anchor"></a>Analyze</h4>
 <p>Read log.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">log_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/read_log.html">read_log</a></span><span class="op">(</span><span class="va">log_csv</span><span class="op">)</span></code></pre></div>
 <p>Assume log contains all the required IP addresses.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">address_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">log_df</span><span class="op">$</span><span class="va">address</span><span class="op">)</span>
 <span class="va">address_all</span>
 <span class="co">#&gt; [1] "192.168.1.1/24" "192.168.1.2/24" "192.168.1.3/24"</span></code></pre></div>
 <p>Do the analysis varying <code>N</code>.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/measure_subnet_timeout.html">measure_subnet_timeout</a></span><span class="op">(</span><span class="va">log_df</span>, N <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 2 × 4</span>
 <span class="co">#&gt;   address        start               end                 n_timeout</span>
