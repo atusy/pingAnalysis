@@ -23,6 +23,8 @@ Analyze ping log.
 
 ## Installation
 
+Requires R >= 4.1.
+
 You can install the development version from [GitHub](https://github.com/) with:
 
 ``` r
