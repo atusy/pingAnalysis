@@ -2,8 +2,8 @@
 #' @noRd
 coerce_ipv4_to_bits <- function(ipv4) {
   ipv4 |>
-    stringr::str_remove('/.*$') |>
-    stringr::str_split('\\.') |>
+    stringr::str_remove("/.*$") |>
+    stringr::str_split("\\.") |>
     purrr::map(function(x) {
       unlist(purrr::map(
         x,
@@ -18,7 +18,7 @@ coerce_ipv4_to_bits <- function(ipv4) {
 #' @param ipv4 must be suffixed by prefix-size.
 #' @noRd
 find_subnet <- function(ipv4) {
-  prefix_size <- stringr::str_extract(ipv4, '[0-9]+$')
+  prefix_size <- stringr::str_extract(ipv4, "[0-9]+$")
   purrr::map2_chr(
     coerce_ipv4_to_bits(ipv4),
     prefix_size,
@@ -29,7 +29,7 @@ find_subnet <- function(ipv4) {
 #' @param str A binary string with 32bits.
 #' @noRd
 find_network_internal <- function(str) {
-  start = seq(0L, 3L) * 8L + 1L
+  start <- seq(0L, 3L) * 8L + 1L
   str |>
     substring(start, start + 7L) |>
     strtoi(base = 2L) |>
@@ -76,14 +76,12 @@ measure_subnet_timeout_one_switch <- function(
   log |>
     dplyr::arrange(timestamp) |>
     dplyr::mutate(
-      dead = collect_dead_address(address, ping),
       ping = dplyr::if_else(
-        purrr::map_lgl(dead, setequal, member),
+        purrr::map_lgl(collect_dead_address(address, ping), setequal, member),
         NA_real_,
         dplyr::coalesce(ping, 0)
       ),
       address = network,
-      dead = NULL
     ) |>
     measure_timeout(N = 1L) |>
     dplyr::mutate(n_timeout = as.integer(ceiling(n_timeout / 3)))
@@ -113,8 +111,8 @@ group_log_by_subnet <- function(log) {
 #'
 #' @inheritParams measure_timeout
 #' @param address_all
-#' A character vector of all the IPv4 addresses to be logged.
-#' They must be annotated by prefix size (e.g., '192.168.1.1/24').
+#'   A character vector of all the IPv4 addresses to be logged.
+#'   They must be annotated by prefix size (e.g., '192.168.1.1/24').
 measure_subnet_timeout <- function(log, N = 1L, address_all = NULL) {
   group_log_by_subnet(log) |>
     purrr::map_dfr(

@@ -1,9 +1,9 @@
 tidy_log <- function(df) {
   df |>
-    stats::setNames(c('timestamp', 'address', 'ping')) |>
+    stats::setNames(c("timestamp", "address", "ping")) |>
     dplyr::mutate(
-      timestamp = lubridate::parse_date_time(timestamp, order = 'ymdHMS'),
-      ping = as.numeric(ifelse(ping == '-', NA_character_, ping))
+      timestamp = lubridate::parse_date_time(timestamp, order = "ymdHMS"),
+      ping = as.numeric(ifelse(ping == "-", NA_character_, ping))
     ) |>
     dplyr::arrange(timestamp)
 }
@@ -20,6 +20,6 @@ tidy_log <- function(df) {
 #' @export
 read_log <- function(path) {
   path |>
-    readr::read_csv(col_names = FALSE, col_types = 'c') |>
+    readr::read_csv(col_names = FALSE, col_types = "c") |>
     tidy_log()
 }

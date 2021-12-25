@@ -8,16 +8,13 @@
 #' If window contains `NA`, its result also becomes `NA`.
 #'
 #' @noRd
-rollmean <- function(
-  x,
-  m
-) {
+rollmean <- function(x, m) {
   x |>
     slider::slide_dbl(
       function(x) `if`(is.null(x), NA_real_, mean(x)),
       .before = m - 1L,
       .complete = TRUE
-    ) |> print()
+    )
 }
 
 #' Let overload be timeout
