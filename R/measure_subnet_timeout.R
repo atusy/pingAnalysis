@@ -5,10 +5,7 @@ coerce_ipv4_to_bits <- function(ipv4) {
     stringr::str_remove("/.*$") |>
     stringr::str_split("\\.") |>
     purrr::map(function(x) {
-      unlist(purrr::map(
-        x,
-        function(x) rev(as.integer(intToBits(x)[0:8]))
-      ))
+      unlist(purrr::map(x, function(x) rev(as.integer(intToBits(x)[0:8]))))
     })
 }
 
