@@ -30,7 +30,7 @@ Load the package with:
 library(pingAnalysis)
 ```
 
-### Treat all ping timeout as server being out of service.
+### 1\. Treat all ping timeout as server being out of service.
 
 #### Prepare data
 
@@ -73,7 +73,7 @@ measure_all_timeout(read_log(log_csv))
 #> 2 192.168.1.1/24 2020-01-01 00:00:04 NA                          2
 ```
 
-### Treat ping timeout as server being out of service **if timeout continues `N`-times or more**.
+### 2\. Treat ping timeout as server being out of service **if timeout continues `N`-times or more**.
 
 Data inherits from the previous example.
 
@@ -104,7 +104,7 @@ measure_timeout(read_log(log_csv), N = 2L)
 #> 1 192.168.1.1/24 2020-01-01 00:00:04 NA                          2
 ```
 
-### Treat ping result as server being overloaded if rolling mean of ping is greater than or equal to threshold.
+### 3\. Treat ping result as server being overloaded if rolling mean of ping is greater than or equal to threshold.
 
 #### Prepare data
 
@@ -199,7 +199,7 @@ measure_overload(log_df, m = 1L, t = 10, N = 2L)
 #> 3 192.168.1.1/24 2020-01-01 00:00:07 NA                          2
 ```
 
-### Treat ping result as **subnet**, or network-switch, being out-of-order if all servers fail to response for `N`-times or more.
+### 4\. Treat ping result as **subnet**, or network-switch, being out-of-order if all servers fail to response for `N`-times or more.
 
 #### Prepare data
 

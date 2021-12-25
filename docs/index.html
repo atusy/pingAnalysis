@@ -68,6 +68,7 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
+<p>Requires R &gt;= 4.1.</p>
 <p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
@@ -79,9 +80,9 @@
 <p>Load the package with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">pingAnalysis</span><span class="op">)</span></code></pre></div>
-<div id="treat-all-ping-timeout-as-server-being-out-of-service" class="section level3">
+<div id="1-treat-all-ping-timeout-as-server-being-out-of-service" class="section level3">
 <h3 class="hasAnchor">
-<a href="#treat-all-ping-timeout-as-server-being-out-of-service" class="anchor"></a>Treat all ping timeout as server being out of service.</h3>
+<a href="#1-treat-all-ping-timeout-as-server-being-out-of-service" class="anchor"></a>1. Treat all ping timeout as server being out of service.</h3>
 <div id="prepare-data" class="section level4">
 <h4 class="hasAnchor">
 <a href="#prepare-data" class="anchor"></a>Prepare data</h4>
@@ -143,9 +144,9 @@
 <span class="co">#&gt; 2 192.168.1.1/24 2020-01-01 00:00:04 NA                          2</span></code></pre></div>
 </div>
 </div>
-<div id="treat-ping-timeout-as-server-being-out-of-service-if-timeout-continues-n-times-or-more" class="section level3">
+<div id="2-treat-ping-timeout-as-server-being-out-of-service-if-timeout-continues-n-times-or-more" class="section level3">
 <h3 class="hasAnchor">
-<a href="#treat-ping-timeout-as-server-being-out-of-service-if-timeout-continues-n-times-or-more" class="anchor"></a>Treat ping timeout as server being out of service <strong>if timeout continues <code>N</code>-times or more</strong>.</h3>
+<a href="#2-treat-ping-timeout-as-server-being-out-of-service-if-timeout-continues-n-times-or-more" class="anchor"></a>2. Treat ping timeout as server being out of service <strong>if timeout continues <code>N</code>-times or more</strong>.</h3>
 <p>Data inherits from the previous example.</p>
 <div id="analyze-1" class="section level4">
 <h4 class="hasAnchor">
@@ -173,9 +174,9 @@
 <span class="co">#&gt; 1 192.168.1.1/24 2020-01-01 00:00:04 NA                          2</span></code></pre></div>
 </div>
 </div>
-<div id="treat-ping-result-as-server-being-overloaded-if-rolling-mean-of-ping-is-greater-than-or-equal-to-threshold" class="section level3">
+<div id="3-treat-ping-result-as-server-being-overloaded-if-rolling-mean-of-ping-is-greater-than-or-equal-to-threshold" class="section level3">
 <h3 class="hasAnchor">
-<a href="#treat-ping-result-as-server-being-overloaded-if-rolling-mean-of-ping-is-greater-than-or-equal-to-threshold" class="anchor"></a>Treat ping result as server being overloaded if rolling mean of ping is greater than or equal to threshold.</h3>
+<a href="#3-treat-ping-result-as-server-being-overloaded-if-rolling-mean-of-ping-is-greater-than-or-equal-to-threshold" class="anchor"></a>3. Treat ping result as server being overloaded if rolling mean of ping is greater than or equal to threshold.</h3>
 <div id="prepare-data-1" class="section level4">
 <h4 class="hasAnchor">
 <a href="#prepare-data-1" class="anchor"></a>Prepare data</h4>
@@ -336,9 +337,9 @@
 <span class="co">#&gt; 3 192.168.1.1/24 2020-01-01 00:00:07 NA                          2</span></code></pre></div>
 </div>
 </div>
-<div id="treat-ping-result-as-subnet-or-network-switch-being-out-of-order-if-all-servers-fail-to-response-for-n-times-or-more" class="section level3">
+<div id="4-treat-ping-result-as-subnet-or-network-switch-being-out-of-order-if-all-servers-fail-to-response-for-n-times-or-more" class="section level3">
 <h3 class="hasAnchor">
-<a href="#treat-ping-result-as-subnet-or-network-switch-being-out-of-order-if-all-servers-fail-to-response-for-n-times-or-more" class="anchor"></a>Treat ping result as <strong>subnet</strong>, or network-switch, being out-of-order if all servers fail to response for <code>N</code>-times or more.</h3>
+<a href="#4-treat-ping-result-as-subnet-or-network-switch-being-out-of-order-if-all-servers-fail-to-response-for-n-times-or-more" class="anchor"></a>4. Treat ping result as <strong>subnet</strong>, or network-switch, being out-of-order if all servers fail to response for <code>N</code>-times or more.</h3>
 <div id="prepare-data-2" class="section level4">
 <h4 class="hasAnchor">
 <a href="#prepare-data-2" class="anchor"></a>Prepare data</h4>
