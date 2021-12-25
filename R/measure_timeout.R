@@ -8,16 +8,31 @@ filter_timeout <- function(log_df) {
     dplyr::ungroup()
 }
 
-#' Summarize timeout of log
+#' Measure timeout of log
 #'
-#' @param log A `data.frame` that records the log.
+#' `measure_timeout()` measures timeout errors that continuously occurs `N`
+#' times or more. `N = 1` is equivalent to `measure_all_timeout()`.
 #'
-#' @value A data frame with following columns:
-#' - address: <chr> IPv4 addresses that suffered timeout.
-#' - start: <dttm> When server started to timeout.
-#' - end: <dttm> When server resumed or `NA` if not resumed.
-#' - n_timeout: <int> Number of timeout before resume.
+#' @param log_df A `data.frame` that records the log.
+#' @param N Threshold of continuous errors to be considered as fatal.
 #'
+#' @return A data frame with following columns:
+#' - address: (chr) IPv4 addresses that suffered timeout.
+#' - start: (dttm) When server started to timeout.
+#' - end: (dttm) When server resumed or `NA` if not resumed.
+#' - n_timeout: (int) Number of timeout before resume.
+#'
+#' @examples
+#' log_df <- data.frame(
+#'   timestamp = lubridate::ymd_hms(20200101000000 + seq(5)),
+#'   address = "192.168.1.1/24",
+#'   ping = c(1, NA, 1, NA, NA)
+#' )
+#'
+#' measure_timeout(log_df, N = 1L) # equivalent to measure_all_timeout(log)
+#' measure_timeout(log_df, N = 2L)
+#'
+#' @return data.frame
 #' @export
 measure_all_timeout <- function(log_df) {
   log_df |>
@@ -36,6 +51,8 @@ measure_all_timeout <- function(log_df) {
     dplyr::arrange(start, end)
 }
 
+#' @rdname measure_all_timeout
+#' @export
 measure_timeout <- function(log_df, N = 2L) {
   log_df |>
     measure_all_timeout() |>

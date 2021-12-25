@@ -34,7 +34,7 @@ find_network_internal <- function(str) {
 }
 
 #' Find network address
-#'
+#' @noRd
 find_network <- function(subnet) {
   subnet |>
     stringr::str_pad("0", width = 32L, side = "right") |>
@@ -46,6 +46,12 @@ find_network <- function(subnet) {
 #'
 #' On timeout, an address is added to the set of currently dead.
 #' Otherwise, the address removed from the set.
+#'
+#' @param address,ping the corresponding columns from the `log_df`
+#'
+#' @return list of character representing addresses not responding.
+#'
+#' @noRd
 collect_dead_address <- function(address, ping) {
   purrr::accumulate2(
     address,
@@ -56,6 +62,13 @@ collect_dead_address <- function(address, ping) {
 }
 
 #' Measure timeout of one subnet, or switch
+#'
+#' @inheritParams measure_timeout
+#' @param address_list A named list of IPv4 addresses that defines the addresses
+#'   which should be present in each network represented by their names.
+#'   The value is typically created by `group_address_by_subnet()`.
+#'   Internally, required addresses are also collected from `log_df`.
+#'
 #' @noRd
 measure_subnet_timeout_one_switch <- function(
   log_df,
@@ -85,6 +98,10 @@ measure_subnet_timeout_one_switch <- function(
 }
 
 #' Converts the IPv4 addresses into a list of character based on subnet
+#'
+#' @param ipv4 A character vector of IPv4 addresses suffixed by prefix-size.
+#'
+#' @return A named list of character vectors.
 #' @noRd
 group_address_by_subnet <- function(ipv4) {
   ipv4 |>
@@ -96,6 +113,8 @@ group_address_by_subnet <- function(ipv4) {
 }
 
 #' Converts the log data frame into a list of data frame based on subnet
+#'
+#' @return A named list of `log_df`-like data frames.
 #' @noRd
 group_log_by_subnet <- function(log_df) {
   log_df |>
@@ -106,10 +125,36 @@ group_log_by_subnet <- function(log_df) {
 
 #' Measure timeout of subnet, or switch.
 #'
-#' @inheritParams measure_timeout
+#' @inheritParams measure_all_timeout
 #' @param address_all
 #'   A character vector of all the IPv4 addresses to be logged.
-#'   They must be annotated by prefix size (e.g., '192.168.1.1/24').
+#'   They must be suffixed by prefix-size (e.g., '192.168.1.1/24').
+#'
+#' @examples
+#' # Prepare data
+#' basetime <- 20200101000000
+#' pings <- c(
+#'   # 1  2  3  4  5  6  7  8  9 10
+#'   1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+#'   1, 1, 0, 0, 0, 0, 1, 1, 0, 1,
+#'   1, 1, 1, 0, 0, 0, 0, 1, 0, 1
+#' )
+#' N <- length(pings) / 3L
+#' log_df <- tibble::tibble(
+#'   timestamp = lubridate::ymd_hms(basetime + seq(N)) |> rep(3L),
+#'   address = paste0("192.168.1.", 1L:3L, "/24") |> rep(each = N),
+#'   ping = ifelse(pings == 0, NA_real_, pings)
+#' )
+#'
+#' # Measure
+#' measure_subnet_timeout(
+#'   log_df,
+#'   N = 2L,
+#'   address_all = unique(log_df$address)
+#' )
+#'
+#' @inherit measure_all_timeout return
+#' @export
 measure_subnet_timeout <- function(log_df, N = 1L, address_all = NULL) {
   group_log_by_subnet(log_df) |>
     purrr::map_dfr(

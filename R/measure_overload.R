@@ -3,9 +3,12 @@
 #' @param x A numeric vector.
 #' @param m A window size.
 #'
-#' @value
+#' @return
 #' A numeric vector. The first `m - 1L` items become `NA`.
 #' If window contains `NA`, its result also becomes `NA`.
+#'
+#' @examples
+#' rollmean(c(1, 3, 5, 7), 2L) # c(NA, 2, 4, 6)
 #'
 #' @noRd
 rollmean <- function(x, m) {
@@ -26,7 +29,7 @@ rollmean <- function(x, m) {
 #' @param m A window size for rolling mean of ping.
 #' @param t Threshold of overload.
 #'
-#' @value A numeric vector
+#' @return A numeric vector
 #' @noRd
 let_overload_be_timeout <- function(ping, m = 2L, t = 10) {
   average <- dplyr::coalesce(rollmean(ping, m), 0)
@@ -39,12 +42,24 @@ let_overload_be_timeout <- function(ping, m = 2L, t = 10) {
 #' Summarize the overload conditions when rolling mean of ping exceeds the
 #' limit. If a window contains timeout, it is not considered as overload
 #' regardless of any finite values within the window.
+#' Note that no-response is discarded instead of being treated as timeout by
+#' `measure_timeout()`.
 #'
-#' @inheritParams measure_timeout
+#' @inheritParams measure_all_timeout
 #' @param m A window size of rolling mean of ping time.
 #' @param t Upper limit of rolling mean of ping time.
 #'
-#' @inheritSection measure_timeout value
+#' @examples
+#' log_df <- data.frame(
+#'   timestamp = lubridate::ymd_hms(20200101000000 + seq(6)),
+#'   address = "192.168.1.1/24",
+#'   ping = c(1, 10, NA, 10, 10, NA)
+#' )
+#' measure_overload(log_df, m = 1L, t = 10)
+#' measure_overload(log_df, m = 2L, t = 10)
+#'
+#' @inherit measure_all_timeout return
+#' @export
 measure_overload <- function(log_df, m = 2L, t = 10, N = 1L) {
   log_df |>
     dplyr::group_by(address) |>
