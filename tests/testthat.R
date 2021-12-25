@@ -1,4 +1,4 @@
 library(testthat)
-library(fixpointCodingTest)
+library(pingAnalysis)
 
-test_check("fixpointCodingTest")
+test_check("pingAnalysis")
