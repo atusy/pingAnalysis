@@ -30,7 +30,7 @@ rollmean <- function(x, m) {
 #' @noRd
 let_overload_be_timeout <- function(ping, m = 2L, t = 10) {
   average <- dplyr::coalesce(rollmean(ping, m), 0)
-  return(if_else(average >= t, NA_real_, average))
+  return(dplyr::if_else(average >= t, NA_real_, average))
 }
 
 

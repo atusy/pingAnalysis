@@ -4,7 +4,7 @@ filter_timeout <- function(log) {
   log |>
     dplyr::mutate(down = is.na(ping)) |>
     dplyr::group_by(address) |>
-    dplyr::filter(down | lag(down, default = FALSE)) |>
+    dplyr::filter(down | dplyr::lag(down, default = FALSE)) |>
     dplyr::ungroup()
 }
 
