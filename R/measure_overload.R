@@ -45,8 +45,8 @@ let_overload_be_timeout <- function(ping, m = 2L, t = 10) {
 #' @param t Upper limit of rolling mean of ping time.
 #'
 #' @inheritSection measure_timeout value
-measure_overload <- function(log, m = 2L, t = 10, N = 1L) {
-  log |>
+measure_overload <- function(log_df, m = 2L, t = 10, N = 1L) {
+  log_df |>
     dplyr::group_by(address) |>
     dplyr::mutate(ping = let_overload_be_timeout(ping, m)) |>
     dplyr::ungroup() |>

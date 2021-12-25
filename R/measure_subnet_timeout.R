@@ -61,19 +61,19 @@ collect_dead_address <- function(address, ping) {
 #' Measure timeout of one subnet, or switch
 #' @noRd
 measure_subnet_timeout_one_switch <- function(
-  log,
-  N,
+  log_df,
+  N = 1L,
   address_list = NULL
 ) {
-  subnet <- unique(find_subnet(log$address))
+  subnet <- unique(find_subnet(log_df$address))
   if (length(subnet) != 1L) stop("Subnet must be uniuqe")
   network <- find_network(subnet)
   member <- `if`(
     is.null(address_list),
-    unique(log$address),
+    unique(log_df$address),
     address_list[[subnet]]
   )
-  log |>
+  log_df |>
     dplyr::arrange(timestamp) |>
     dplyr::mutate(
       ping = dplyr::if_else(
@@ -100,8 +100,8 @@ group_address_by_subnet <- function(ipv4) {
 
 #' Converts the log data frame into a list of data frame based on subnet
 #' @noRd
-group_log_by_subnet <- function(log) {
-  log |>
+group_log_by_subnet <- function(log_df) {
+  log_df |>
     dplyr::mutate(subnet = find_subnet(address)) |>
     tidyr::nest(data = !subnet) |>
     tibble::deframe()
@@ -113,11 +113,11 @@ group_log_by_subnet <- function(log) {
 #' @param address_all
 #'   A character vector of all the IPv4 addresses to be logged.
 #'   They must be annotated by prefix size (e.g., '192.168.1.1/24').
-measure_subnet_timeout <- function(log, N = 1L, address_all = NULL) {
-  group_log_by_subnet(log) |>
+measure_subnet_timeout <- function(log_df, N = 1L, address_all = NULL) {
+  group_log_by_subnet(log_df) |>
     purrr::map_dfr(
       measure_subnet_timeout_one_switch,
-      address_list = group_address_by_subnet(c(address_all, log$address))
+      address_list = group_address_by_subnet(c(address_all, log_df$address))
     ) |>
     dplyr::arrange(start, end)
 }
